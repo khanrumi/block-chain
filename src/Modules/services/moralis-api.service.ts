@@ -40,7 +40,7 @@ export class MoralisApiService {
           // params: {chain: 'eth'}
         }),
       );
-      
+
       return response.data.result.find(token => token.name === "Ether");
     } catch (error) {
       console.log(error, 'error');
@@ -58,7 +58,7 @@ export class MoralisApiService {
       );
 
       return response.data;
-      
+
     } catch (error) {
       console.log(error, 'error');
       throw new Error(`Failed to fetch price for address: ${error}`);
@@ -67,7 +67,7 @@ export class MoralisApiService {
 
   async getPrices(chain: string[]): Promise<any[]> {
     const pricePromises = chain.map(async (chainType: string) => {
-      
+
       if (chainType === 'polygon') {
         return this.fetchPolyPrice(this.polyAddress);
       } else if (chainType === 'eth') {
