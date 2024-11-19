@@ -78,7 +78,7 @@ export class MoralisApiService {
     const pricePromises = chain.map(async (chainType: string) => {
       if (chainType === 'polygon') {
         return this.fetchPolyPrice(this.polyAddress);
-      } else if (chainType === 'ethereum') {
+      } else if (chainType === 'ethereum' || chainType === 'eth') {
         return this.fetchEthPrice(this.ethAddress);
       }
       return null;

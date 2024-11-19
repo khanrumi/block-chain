@@ -35,27 +35,12 @@ export class ChainService {
 
       const savedData = await Promise.all(
         chainData.map(async (data, index) => {
-          // const { tokenName, tokenSymbol, tokenLogo, usdPrice, usd_price, name, symbol, logo } = data;
-          const { 
-            tokenName = '', 
-            tokenSymbol = '', 
-            tokenLogo = '', 
-            usdPrice = 0, 
-            usd_price = 0, 
-            name = '', 
-            symbol = '', 
-            logo = '' 
-          } = data;
-
-          console.log(data, 'data_test');
-          
-          
           const body = {
-            chain: tokenName ? 'POLYGON' : 'ETH',
-            tokenName: tokenName || name,
-            tokenSymbol: tokenSymbol || symbol,
-            tokenLogo: tokenLogo || logo,
-            price: usdPrice || usd_price
+            chain: data?.tokenName ? 'POLYGON' : 'ETH',
+            tokenName: data?.tokenName || data?.name,
+            tokenSymbol: data?.tokenSymbol || data?.symbol,
+            tokenLogo: data?.tokenLogo || data?.logo,
+            price: data?.usdPrice || data?.usd_price
           };
 
         let priceData;
@@ -95,9 +80,6 @@ export class ChainService {
           return priceData;
         }),
       );
-      console.log(savedData, 'savedDatasavedData');
-      
-
       if (savedData && savedData.length > 0) {
         return {
           status: 1,

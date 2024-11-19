@@ -5,10 +5,10 @@ export class HourlyPriceHistory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'varchar', length: 20, nullable: true })
   chain: string;
 
-  @Column({ type: 'decimal', precision: 18, scale: 8 })
+  @Column({ type: 'decimal', precision: 18, scale: 8, nullable: true })
   price: number;
 
   @CreateDateColumn()

@@ -17,7 +17,7 @@ export class CryptoPrice {
   @Column({ type: 'varchar', nullable: true })
   tokenName: string;
 
-  @Column({ type: 'decimal' })
+  @Column({ type: 'decimal', nullable: true })
   price: number;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
