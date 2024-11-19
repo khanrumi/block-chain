@@ -3,8 +3,8 @@ import { IsString, IsNumber, IsOptional, IsEmail } from 'class-validator';
 
 export class AlertDto {
     @ApiProperty({
-        example: 'Ethereum',
-        description: 'The blockchain network (e.g., Ethereum, Bitcoin)',
+        example: 'ethereum',
+        description: 'The blockchain network (e.g., ethereum, polygon)',
     })
     @IsString()
     chain: string;

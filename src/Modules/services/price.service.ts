@@ -5,6 +5,7 @@ import { Cron } from '@nestjs/schedule';
 import { ChainType } from '../types/chain.types';
 import {HourlyPriceHistoryRepository} from '../repositories/priceHourlyHistory.repository';
 import { EmailService } from './email.service';
+import { LessThan } from 'typeorm';
 
 
 @Injectable()
@@ -34,7 +35,20 @@ export class ChainService {
 
       const savedData = await Promise.all(
         chainData.map(async (data, index) => {
-          const { tokenName, tokenSymbol, tokenLogo, usdPrice, usd_price, name, symbol, logo } = data;
+          // const { tokenName, tokenSymbol, tokenLogo, usdPrice, usd_price, name, symbol, logo } = data;
+          const { 
+            tokenName = '', 
+            tokenSymbol = '', 
+            tokenLogo = '', 
+            usdPrice = 0, 
+            usd_price = 0, 
+            name = '', 
+            symbol = '', 
+            logo = '' 
+          } = data;
+
+          console.log(data, 'data_test');
+          
           
           const body = {
             chain: tokenName ? 'POLYGON' : 'ETH',
@@ -58,10 +72,12 @@ export class ChainService {
 
           if(type === "EVERY_HOUR_OF_DAY"){
             const previousPriceData = await this.hourlyPriceHistoryRepository.findHourlyPrice({
-              where: { chain: body.chain, timestamp: { $lt: new Date() } },
+              where: { chain: body.chain, timestamp: LessThan(new Date())  },
               order: { timestamp: 'DESC' },
               take: 1,
             });
+            console.log(previousPriceData, 'previousPriceData');
+            
   
             if (previousPriceData && previousPriceData.length > 0) {
               const previousPrice = previousPriceData[0].price;
@@ -79,6 +95,8 @@ export class ChainService {
           return priceData;
         }),
       );
+      console.log(savedData, 'savedDatasavedData');
+      
 
       if (savedData && savedData.length > 0) {
         return {

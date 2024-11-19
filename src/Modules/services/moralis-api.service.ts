@@ -12,37 +12,49 @@ export class MoralisApiService {
   private readonly ethAddress: string;
   private readonly btcAddress: string;
 
+  private readonly polyUrl: string;
+  private readonly ethUrl: string;
+  private readonly btcUrl: string;
+  
+
   constructor(private readonly httpService: HttpService) {
     this.apiKey = process.env.MORALIS_API_KEY;
-    this.polyAddress = process.env.POLY_ADDRESS;
-    this.ethAddress = process.env.ETH_ADDRESS;
-    this.btcAddress = process.env.BTC_ADDRESS;
+    // this.polyAddress = process.env.POLY_ADDRESS;
+    // this.ethAddress = process.env.ETH_ADDRESS;
+    // this.btcAddress = process.env.BTC_ADDRESS;
+    this.polyUrl = process.env.POLY_URL
+    this.ethUrl = process.env.ETH_URL
+    this.btcUrl = process.env.BTC_URL
   }
 
   private async fetchPolyPrice(address: string): Promise<any> {
     try {
       const response = await lastValueFrom(
-        this.httpService.get(`https://deep-index.moralis.io/api/v2.2/erc20/${address}/price`, {
+        this.httpService.get(this.polyUrl, {
           headers: { 'X-API-Key': this.apiKey },
         }),
       );
+
       return response.data;
     } catch (error) {
+
       throw new Error(`Failed to fetch price for address: ${address}`);
     }
   }
 
   async fetchEthPrice(address: string): Promise<any> {
     try {
+
       const response = await lastValueFrom(
-        this.httpService.get(`https://deep-index.moralis.io/api/v2.2/wallets/${address}/tokens`, {
+        this.httpService.get(this.ethUrl, {
           headers: { 'X-API-Key': this.apiKey },
           // params: {chain: 'eth'}
         }),
       );
-      
+
       return response.data.result.find(token => token.name === "Ether");
     } catch (error) {
+
       throw new Error(`Failed to fetch price for address: ${error}`);
     }
   }
@@ -50,14 +62,13 @@ export class MoralisApiService {
   async fetchBtcPrice(address: string): Promise<any> {
     try {
       const response = await lastValueFrom(
-        this.httpService.get(`https://deep-index.moralis.io/api/v2.2/erc20/${address}/price`, {
+        this.httpService.get(this.btcUrl, {
           headers: { 'X-API-Key': this.apiKey },
           // params: {chain: 'eth'}
         }),
       );
-
       return response.data;
-      
+
     } catch (error) {
       throw new Error(`Failed to fetch price for address: ${error}`);
     }
@@ -65,10 +76,9 @@ export class MoralisApiService {
 
   async getPrices(chain: string[]): Promise<any[]> {
     const pricePromises = chain.map(async (chainType: string) => {
-      
       if (chainType === 'polygon') {
         return this.fetchPolyPrice(this.polyAddress);
-      } else if (chainType === 'eth') {
+      } else if (chainType === 'ethereum') {
         return this.fetchEthPrice(this.ethAddress);
       }
       return null;
